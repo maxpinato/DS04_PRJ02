@@ -69,6 +69,8 @@ dew4p2.l_ylab <- "10^6 TONS Of PM2.5"
 dew4p2.l_xlab <- "Year of Measurements"
 dew4p2.l_yrefactor <- 1000000
 dew4p2.l_fileName <- "plot1.png"
+dew4p2.l_yearFrom <- c(1,1999)
+dew4p2.l_yearTo <- c(4,2008)
 
 dew4p2.l_fncSummaryByCountryAndYear <- function(df){
   
@@ -84,6 +86,36 @@ dew4p2.l_fncPlot <- function(dfEmissionByYear){
           ylab = dew4p2.l_ylab,
           xlab = dew4p2.l_xlab ,
           main = dew4p2.l_mainTitle)  
+  
+  dew4p2.l_fncPlotSegment(
+    dfEmissionByYear = dfEmissionByYear,
+    xYearFrom = dew4p2.l_yearFrom[1] ,
+    xYearTo = dew4p2.l_yearTo[1],
+    yearFrom = dew4p2.l_yearFrom[2],
+    yearTo = dew4p2.l_yearTo[2],
+    factor = dew4p2.l_yrefactor
+  )
+  
+}
+
+dew4p2.l_fncGetValueByYear <- function(dfEmissionByYear,searchYear){
+  
+  return(dfEmissionByYear %>% filter(year==searchYear) %>% select(totale));
+  
+}
+
+dew4p2.l_fncPlotSegment <- function(dfEmissionByYear,
+                                    xYearFrom,xYearTo,yearFrom,yearTo,
+                                    factor){
+  
+  l_valYearFrom <- dew4p2.l_fncGetValueByYear(dfEmissionByYear,yearFrom) / factor
+  l_valYearTo <- dew4p2.l_fncGetValueByYear(dfEmissionByYear,yearTo) / factor
+  segments(
+    xYearFrom,l_valYearFrom[[1]],
+    xYearTo,l_valYearTo[[1]],
+    col="blue",
+    lwd=5
+  )
   
 }
 
